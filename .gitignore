@@ -1,0 +1,40 @@
+# Environment
+.venv/
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Tests and linters
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
