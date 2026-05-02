@@ -15,3 +15,9 @@ celery_app.conf.update(
     timezone="UTC",
     enable_utc=True,
 )
+
+celery_app.autodiscover_tasks(
+    ["app.tasks"],
+    related_name="llm_tasks",
+    force=True,
+)

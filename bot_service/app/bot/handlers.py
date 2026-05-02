@@ -4,24 +4,16 @@ from aiogram.filters.command import CommandObject
 from aiogram.types import Message
 
 from app.core.jwt import decode_and_validate
-from app.infra.celery_app import celery_app
 from app.infra.redis import get_redis
+from app.tasks.llm_tasks import llm_request
 
 router = Router()
 
 TOKEN_TTL_SECONDS = 24 * 60 * 60
-LLM_REQUEST_TASK_NAME = "app.tasks.llm_tasks.llm_request"
 
 
 def build_token_key(telegram_user_id: int) -> str:
     return f"token:{telegram_user_id}"
-
-
-def enqueue_llm_request(chat_id: int, prompt: str) -> None:
-    celery_app.send_task(
-        LLM_REQUEST_TASK_NAME,
-        args=[chat_id, prompt],
-    )
 
 
 def get_telegram_user_id(message: Message) -> int | None:
@@ -112,9 +104,9 @@ async def handle_text_message(message: Message) -> None:
         )
         return
 
-    enqueue_llm_request(
-        chat_id=message.chat.id,
-        prompt=message.text,
+    llm_request.delay(
+        message.chat.id,
+        message.text,
     )
 
     await message.answer(
